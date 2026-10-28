@@ -1,8 +1,14 @@
-"""digit_recognizer: reusable code for the Kaggle Digit Recognizer assignment.
+"""digit_recognizer: reusable code for the Kaggle Digit Recognizer assignment."""
 
-Functions from data.py, models.py, train.py and predict.py are exposed here
-as each module is written, so the notebook can use:
-    from digit_recognizer import <function>
-"""
+from .data import (
+    DigitDataset,
+    check_data,
+    compute_mean_std,
+    load_test,
+    load_train,
+    make_loaders,
+    split_train_val,
+)
+from .utils import get_device, set_seed
 
 __version__ = "0.1.0"

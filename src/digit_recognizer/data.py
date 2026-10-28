@@ -7,6 +7,7 @@ import pandas as pd
 import torch
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader, Dataset
+from torchvision import transforms
 
 N_PIXELS = 784
 IMAGE_SIZE = 28
@@ -124,3 +125,19 @@ def make_loaders(train_ds: Dataset, val_ds: Dataset, batch_size: int = 128, seed
                               num_workers=0, generator=generator)
     val_loader = DataLoader(val_ds, batch_size=batch_size, shuffle=False, num_workers=0)
     return train_loader, val_loader
+
+
+def make_augmentation(degrees: float = 10, shift: float = 0.1, scale=(0.9, 1.1)):
+    """Random affine augmentation for training images (tensors of shape [1, 28, 28] in [0, 1]).
+
+    Small rotations, shifts and zooms only. No flips: a mirrored digit is no longer
+    the same digit, and large rotations could turn a 6 into a 9.
+    Empty areas are filled with 0, which is black background before normalisation.
+    """
+    return transforms.RandomAffine(
+        degrees=degrees,
+        translate=(shift, shift),
+        scale=scale,
+        interpolation=transforms.InterpolationMode.BILINEAR,
+        fill=0,
+    )

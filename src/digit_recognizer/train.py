@@ -51,25 +51,36 @@ def evaluate(model, loader, criterion, device):
     return total_loss / total, correct / total
 
 
-def fit(model, train_loader, val_loader, epochs: int, device, lr: float = 1e-3):
+def fit(model, train_loader, val_loader, epochs: int, device, lr: float = 1e-3, scheduler: str | None = None):
     """Train with Adam and cross-entropy, validating after every epoch.
 
     At the end the model is restored to the weights of the epoch with the
     best validation accuracy. Returns a history dict.
+
+    scheduler: None for a constant learning rate, or "cosine" to decrease it
+    from lr towards 0 over the epochs (CosineAnnealingLR, as in Session 12).
     """
     model.to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    lr_scheduler = None
+    if scheduler == "cosine":
+        lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
+    elif scheduler is not None:
+        raise ValueError(f"Unknown scheduler: {scheduler!r}")
 
-    history = {"train_loss": [], "train_acc": [], "val_loss": [], "val_acc": []}
+    history = {"train_loss": [], "train_acc": [], "val_loss": [], "val_acc": [], "lr": []}
     best_val_acc = -1.0
     best_epoch = 0
     best_weights = None
     start = time.time()
 
     for epoch in range(1, epochs + 1):
+        history["lr"].append(optimizer.param_groups[0]["lr"])
         train_loss, train_acc = train_one_epoch(model, train_loader, criterion, optimizer, device)
         val_loss, val_acc = evaluate(model, val_loader, criterion, device)
+        if lr_scheduler is not None:
+            lr_scheduler.step()
 
         history["train_loss"].append(train_loss)
         history["train_acc"].append(train_acc)

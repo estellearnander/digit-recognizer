@@ -33,3 +33,34 @@ class MLP(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.net(x)
+
+
+class SimpleCNN(nn.Module):
+    """Plain CNN with two convolutional blocks and no regularisation.
+
+    Block: Conv2d (3 x 3, padding 1) -> ReLU -> MaxPool2d(2).
+    Shapes: [B, 1, 28, 28] -> [B, 32, 14, 14] -> [B, 64, 7, 7]
+            -> flatten [B, 3136] -> [B, 128] -> [B, 10] logits.
+    Kept plain on purpose so the improvements in section 4 have a clean reference.
+    """
+
+    def __init__(self, num_classes: int = N_CLASSES):
+        super().__init__()
+        self.features = nn.Sequential(
+            nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2),
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2),
+        )
+        self.classifier = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(64 * 7 * 7, 128),
+            nn.ReLU(),
+            nn.Linear(128, num_classes),
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = self.features(x)
+        return self.classifier(x)

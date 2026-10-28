@@ -145,9 +145,3 @@ probs = ensemble_from_weights(sorted(Path("results/models").glob("model_d_seed*.
 write_submission(probs.argmax(axis=1), "results/submission_reproduced.csv")
 ```
 
-## Declaration of AI use
-
-An AI assistant, Claude (Anthropic), was used throughout this assignment, as the instructions allow: for planning,
-drafting the package, tests and notebook code, checking results and drafting the report. All design decisions were
-approved by me, all training was run on my own computer, and all results come from the executed notebook. Details are
-in section 7 of `memory.pdf`.

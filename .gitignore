@@ -225,3 +225,6 @@ data/*.csv
 # PyCharm and macOS
 .idea/
 .DS_Store
+
+# Local backup of the submitted files (not part of the project)
+_backup_submitted/

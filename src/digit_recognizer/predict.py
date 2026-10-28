@@ -4,6 +4,8 @@ import numpy as np
 import pandas as pd
 import torch
 
+from .models import ImprovedCNN
+
 
 @torch.no_grad()
 def predict_proba(model, loader, device) -> np.ndarray:
@@ -49,3 +51,17 @@ def validate_submission(path, n_rows: int = 28000) -> bool:
     if submission["Label"].min() < 0 or submission["Label"].max() > 9:
         raise ValueError("Labels must be between 0 and 9")
     return True
+
+
+def ensemble_from_weights(weight_paths, test_loader, device) -> np.ndarray:
+    """Average the class probabilities of saved ImprovedCNN models (model D).
+
+    Rebuilds each model, loads its saved weights and predicts the loader.
+    Used to reproduce the submitted predictions without retraining.
+    """
+    all_probs = []
+    for path in weight_paths:
+        model = ImprovedCNN()
+        model.load_state_dict(torch.load(path, map_location="cpu"))
+        all_probs.append(predict_proba(model, test_loader, device))
+    return np.mean(all_probs, axis=0)

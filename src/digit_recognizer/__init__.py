@@ -14,7 +14,7 @@ from .data import (
 )
 from .models import MLP, ImprovedCNN, SimpleCNN, SimpleCNNGAP
 from .plots import plot_confusion_matrix, plot_history, plot_misclassified, plot_model_comparison
-from .predict import predict_proba, validate_submission, write_submission
+from .predict import ensemble_from_weights, predict_proba, validate_submission, write_submission
 from .train import count_parameters, evaluate, fit, train_final, train_one_epoch
 from .utils import get_device, set_seed
 

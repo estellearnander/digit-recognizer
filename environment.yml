@@ -1,0 +1,14 @@
+name: digit-recognizer
+channels:
+  - defaults
+dependencies:
+  - torchvision
+  - python=3.11
+  - scikit-learn
+  - numpy
+  - pandas
+  - pytest
+  - matplotlib
+  - pytorch
+  - jupyter
+  - ipykernel

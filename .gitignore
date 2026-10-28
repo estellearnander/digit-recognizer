@@ -218,3 +218,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- digit-recognizer project ---
+# Kaggle data is not committed (see data/README.md)
+data/*.csv
+# PyCharm and macOS
+.idea/
+.DS_Store

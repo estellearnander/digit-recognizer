@@ -29,4 +29,4 @@ The 95% uncertainty of one accuracy value is about ±0.3 points (about ±13 imag
 
 ## Kaggle
 
-Public score: to be added after submission.
+Public score: **0.99232** (username estellearnander03), ensemble of 5 copies of model D trained on all 42,000 images.

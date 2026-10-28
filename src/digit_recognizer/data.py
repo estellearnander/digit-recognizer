@@ -141,3 +141,16 @@ def make_augmentation(degrees: float = 10, shift: float = 0.1, scale=(0.9, 1.1))
         interpolation=transforms.InterpolationMode.BILINEAR,
         fill=0,
     )
+
+
+def make_train_loader(train_ds: Dataset, batch_size: int = 128, seed: int = 42) -> DataLoader:
+    """Shuffled, seeded training DataLoader on its own (used for the final models,
+    which are trained on all labelled images with no validation set)."""
+    generator = torch.Generator()
+    generator.manual_seed(seed)
+    return DataLoader(train_ds, batch_size=batch_size, shuffle=True, num_workers=0, generator=generator)
+
+
+def make_test_loader(test_ds: Dataset, batch_size: int = 256) -> DataLoader:
+    """DataLoader for prediction: fixed order, so row i of the predictions is test image i."""
+    return DataLoader(test_ds, batch_size=batch_size, shuffle=False, num_workers=0)

@@ -102,3 +102,34 @@ def fit(model, train_loader, val_loader, epochs: int, device, lr: float = 1e-3, 
     print(f"Best validation accuracy {best_val_acc:.4f} at epoch {best_epoch} "
           f"({history['train_time_s']:.0f} s)")
     return history
+
+
+def train_final(model, train_loader, epochs: int, device, lr: float = 1e-3, scheduler: str | None = None):
+    """Train for a fixed number of epochs with no validation set.
+
+    Used for the final models trained on all labelled images. There is nothing
+    to select the best epoch on, so the weights after the last epoch are kept.
+    Returns a history of training loss and accuracy.
+    """
+    model.to(device)
+    criterion = nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    lr_scheduler = None
+    if scheduler == "cosine":
+        lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
+    elif scheduler is not None:
+        raise ValueError(f"Unknown scheduler: {scheduler!r}")
+
+    history = {"train_loss": [], "train_acc": [], "lr": []}
+    start = time.time()
+    for epoch in range(1, epochs + 1):
+        history["lr"].append(optimizer.param_groups[0]["lr"])
+        train_loss, train_acc = train_one_epoch(model, train_loader, criterion, optimizer, device)
+        if lr_scheduler is not None:
+            lr_scheduler.step()
+        history["train_loss"].append(train_loss)
+        history["train_acc"].append(train_acc)
+        if epoch % 5 == 0 or epoch == epochs:
+            print(f"Epoch {epoch:2d}/{epochs} | train loss {train_loss:.4f} acc {train_acc:.4f}")
+    history["train_time_s"] = time.time() - start
+    return history

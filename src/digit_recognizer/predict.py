@@ -1,6 +1,7 @@
 """Predictions from trained models."""
 
 import numpy as np
+import pandas as pd
 import torch
 
 
@@ -20,3 +21,31 @@ def predict_proba(model, loader, device) -> np.ndarray:
         probs = torch.softmax(logits, dim=1)
         all_probs.append(probs.cpu().numpy())
     return np.concatenate(all_probs, axis=0)
+
+
+def write_submission(predictions, save_path) -> pd.DataFrame:
+    """Write the Kaggle submission file: header ImageId,Label, ImageId from 1."""
+    submission = pd.DataFrame({
+        "ImageId": np.arange(1, len(predictions) + 1),
+        "Label": np.asarray(predictions, dtype=int),
+    })
+    submission.to_csv(save_path, index=False)
+    return submission
+
+
+def validate_submission(path, n_rows: int = 28000) -> bool:
+    """Check the submission file against the assignment's requirements. Raise ValueError if not met."""
+    submission = pd.read_csv(path)
+    if list(submission.columns) != ["ImageId", "Label"]:
+        raise ValueError(f"Header must be ImageId,Label, got {list(submission.columns)}")
+    if len(submission) != n_rows:
+        raise ValueError(f"Expected {n_rows} rows, got {len(submission)}")
+    if submission.isna().any().any():
+        raise ValueError("Submission contains missing values")
+    if not (submission["ImageId"].values == np.arange(1, n_rows + 1)).all():
+        raise ValueError(f"ImageId must run from 1 to {n_rows} in order")
+    if not pd.api.types.is_integer_dtype(submission["Label"]):
+        raise ValueError("Labels must be integers")
+    if submission["Label"].min() < 0 or submission["Label"].max() > 9:
+        raise ValueError("Labels must be between 0 and 9")
+    return True

@@ -11,7 +11,8 @@ from .data import (
     split_train_val,
 )
 from .models import MLP, ImprovedCNN, SimpleCNN, SimpleCNNGAP
-from .plots import plot_history
+from .plots import plot_confusion_matrix, plot_history, plot_misclassified, plot_model_comparison
+from .predict import predict_proba
 from .train import count_parameters, evaluate, fit, train_one_epoch
 from .utils import get_device, set_seed
 

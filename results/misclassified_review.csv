@@ -1,0 +1,29 @@
+grid_number,train_csv_row,validation_position,true_label,predicted_label,category
+1,24477,3193,3,5,mislabelled in dataset
+2,37290,2690,9,0,0 vs 6/9 (stroke past loop or short stem)
+3,5747,3760,8,9,genuinely ambiguous
+4,37887,2468,9,8,mislabelled in dataset
+5,8169,2638,3,8,genuinely ambiguous
+6,34897,140,0,6,0 vs 6/9 (stroke past loop or short stem)
+7,25946,2840,7,1,mislabelled in dataset
+8,26421,334,8,9,mislabelled in dataset
+9,28611,591,8,9,genuinely ambiguous
+10,6972,3759,2,1,sloppy but readable
+11,31781,3842,9,7,sloppy but readable
+12,34578,2097,0,6,0 vs 6/9 (stroke past loop or short stem)
+13,31539,3314,3,7,clear model mistake
+14,23036,1418,1,2,clear model mistake
+15,24694,2375,1,4,clear model mistake
+16,30019,3107,8,5,sloppy but readable
+17,3748,231,5,9,sloppy but readable
+18,16220,2347,3,9,sloppy but readable
+19,11509,3070,5,9,sloppy but readable
+20,1617,1620,0,6,sloppy but readable
+21,20891,3049,2,1,genuinely ambiguous
+22,26171,1964,4,7,genuinely ambiguous
+23,23231,383,0,6,0 vs 6/9 (stroke past loop or short stem)
+24,38544,1598,1,4,sloppy but readable
+25,18313,312,8,9,sloppy but readable
+26,12958,1205,8,2,clear model mistake
+27,4115,4012,5,6,genuinely ambiguous
+28,39990,977,8,4,genuinely ambiguous
